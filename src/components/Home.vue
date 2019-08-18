@@ -249,8 +249,13 @@ export default {
       if (!selectedDate) {
         this.setDatepickerError("Please select a date.")
       } else {
-        topic.date = this.getDatepickerDate()
-        this.addStudyPlan(topic)
+        const date = this.getDatepickerDate()
+        const {id, name} = topic
+        this.addStudyPlan({
+          id,
+          name,
+          date
+        })
         this.setDatepickerError("")
         this.setDatepickerDate("")
 
