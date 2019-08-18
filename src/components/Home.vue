@@ -227,13 +227,6 @@ export default {
     this.studyPlans = JSON.parse(localStorage.getItem("studyPlans")) || [];
   },
   methods: {
-    sortStudyPlans() {
-      if (this.order === "asc") {
-        return (a, b) => new Date(a.date) - new Date(b.date);
-      } else {
-        return (a, b) => new Date(b.date) - new Date(a.date);
-      }
-    },
     // Controllers
     topicCheckboxHandler(topicId) {
       const topic = this.getTopic(topicId);
@@ -288,18 +281,11 @@ export default {
         );
         setTimeout(() => {
           this.setDatepickerMessage("");
-          this.closeDatePicker("study-plan-datepicker");
+          this.closeDatePicker("study-plan-datepicker"); 
         }, 1500);
       }
     },
 
-    openDatePicker(datePickerId) {
-      this.$bvModal.show("study-plan-datepicker");
-    },
-
-    closeDatePicker(datePickerId) {
-      this.$bvModal.hide("study-plan-datepicker");
-    },
 
     // Models
     setDatepickerDate(date) {
@@ -367,6 +353,22 @@ export default {
       );
 
       return uuid;
+    },
+
+    sortStudyPlans() {
+      if (this.order === "asc") {
+        return (a, b) => new Date(a.date) - new Date(b.date);
+      } else {
+        return (a, b) => new Date(b.date) - new Date(a.date);
+      }
+    },
+
+    openDatePicker(datePickerId) {
+      this.$bvModal.show(datePickerId);
+    },
+
+    closeDatePicker(datePickerId) {
+      this.$bvModal.hide(datePickerId);
     }
   },
   watch: {
