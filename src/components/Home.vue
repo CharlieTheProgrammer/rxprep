@@ -1,51 +1,44 @@
 <template>
-  <div class="hello container">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active" id="topic-tab" data-toggle="tab" href="#topic" role="tab" aria-controls="topic" aria-selected="true">Topics</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="study-plan-tab" data-toggle="tab" href="#study-plan" role="tab" aria-controls="study-plan" aria-selected="false">Study Plan</a>
-      </li>
-    </ul>
-    <div class="tab-content" id="myTabContent">
-      <div class="tab-pane fade show active" id="topic" role="tabpanel" aria-labelledby="topic-tab">
+  <div class="container">
+    <h1 class="display-4 mb-4">{{ msg }}</h1>
 
-        <div id="user-controls" class="d-flex justify-content-end my-3">
-          <div id="search" class="mx-3">
-            <input class="form-control form-control-sm" type="text" placeholder="Search" v-model="inputSearchTopic">
-          </div>
+    <b-card>
+      <b-tabs content-class="mt-3" >
+        <b-tab title="Topics" active>
+          <div id="user-controls-topics" class="d-flex justify-content-end my-3">
+            <div id="search" class="mx-3">
+              <input class="form-control form-control-sm" type="text" placeholder="Search" v-model="inputSearchTopic">
+            </div>
 
-          <div id="input-add-topic">
-              <label class="sr-only" for="add-topic">Add Topic</label>
-              <div class="input-group input-group-sm">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="add-topic"
-                  placeholder="Add Topic"
-                  v-model="inputTopic"
-                  v-on:keyup.enter="addTopicHandler(inputTopic)"
-                >
-                <div class="input-group-append">
-                  <button
-                    class="btn btn-primary"
-                    @click="addTopicHandler(inputTopic)"
-                    onclick="this.blur();" >+</button>
+            <div id="input-add-topic">
+                <label class="sr-only" for="add-topic">Add Topic</label>
+                <div class="input-group input-group-sm">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="add-topic"
+                    placeholder="Add Topic"
+                    v-model="inputTopic"
+                    v-on:keyup.enter="addTopicHandler(inputTopic)"
+                  >
+                  <div class="input-group-append">
+                    <button
+                      class="btn btn-primary"
+                      @click="addTopicHandler(inputTopic)"
+                      onclick="this.blur();" >+</button>
+                  </div>
                 </div>
-              </div>
+            </div>
           </div>
 
-        </div>
+          <div class="border border-secondary">
+              <div class="col">Topic</div>
+          </div>
 
-        <div class="d-flex align-items-center border border-secondary">
-            <div class="col">Study Plan?  Topic</div>
-            <!-- <div class="col">Topic</div> -->
-            <!-- <div class="col">Actions</div> -->
-        </div>
-        <div id="topics-list" class="border border-secondary" style="min-height: 15vh; max-height: 50vh; overflow-y: scroll">
+          <div id="topics-list" class="border border-secondary" style="min-height: 200px; max-height: 50vh; overflow-y: auto">
             <div
-              data="topic-list-item" class="border d-flex align-items-center"
+              :id="'topic-' + topic.id"
+              class="border d-flex align-items-center"
               v-for="topic in filteredTopics"
               :key="topic.id"
               >
@@ -63,56 +56,48 @@
                 <button class="btn btn-sm btn-warning" @click="deleteTopicHandler(topic.id)">Delete Topic</button>
               </div>
             </div>
-
-        </div>
-      </div>
-
-      <div class="tab-pane fade " id="study-plan" role="tabpanel" aria-labelledby="study-plan-tab">
-
-        <div id="user-controls" class="d-flex justify-content-end my-3">
-
-          <div id="search" class="mx-3">
-            <input class="form-control form-control-sm" type="text" placeholder="Search" v-model="inputSearchStudyPlan">
           </div>
+          <small><strong>* Check the box to set a study date.</strong></small>
+        </b-tab>
 
-          <div id="sort-date" class="dropdown">
-            <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Date Sort By
-            </a>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <a class="dropdown-item" href="#" @click="order = 'asc'">Asc.</a>
-              <a class="dropdown-item" href="#" @click="order = 'desc'">Desc.</a>
+        <b-tab title="Study Plan">
+          <div id="user-controls-study-plans" class="d-flex justify-content-end align-items-center my-3">
+            <div id="search-study-plan" class="mx-3">
+              <input class="form-control form-control-sm" type="text" placeholder="Search" v-model="inputSearchStudyPlan">
+            </div>
+
+            <div>
+              <b-dropdown id="dropdown-1" text="Date Sort By" class="" size="sm" variant="outline-secondary">
+                <b-dropdown-item :active="order == 'asc' ? true : false" @click="order = 'asc'">Asc.</b-dropdown-item>
+                <b-dropdown-item :active="order == 'desc' ? true : false"  @click="order = 'desc'">Desc.</b-dropdown-item>
+              </b-dropdown>
             </div>
           </div>
 
-        </div>
-
-        <div class="d-flex align-items-center border border-secondary">
-            <div class="col">Topic</div>
-            <div class="col">Study Date</div>
-        </div>
-        <!-- This is the non-table option  -->
-        <div id="study-plan-list" class="border border-secondary" style="min-height: 15vh; max-height: 50vh; overflow-y: scroll">
-
-          <div
-            id="study-plan-list-item"
-            class="border d-flex align-items-center"
-            v-for="studyPlan in filteredStudyPlans"
-            :key="studyPlan.id"
-          >
-            <div class="col">{{studyPlan.name}}</div>
-            <div class="col" v-if="studyPlan.date">{{studyPlan.date | formatDate }}</div>
-            <div class="col" v-else>Missing Study Date</div>
+          <div class="d-flex align-items-center border border-secondary">
+              <div class="col">Topic</div>
+              <div class="col">Study Date</div>
           </div>
-
-        </div>
-      </div>
-    </div>
+          <div id="study-plan-list" class="border border-secondary" style="min-height: 200px; max-height: 50vh;">
+            <div
+              :id="'study-plan-' + studyPlan.id"
+              class="border d-flex align-items-center py-2"
+              v-for="studyPlan in filteredStudyPlans"
+              :key="studyPlan.id"
+            >
+              <div class="col">{{studyPlan.name}}</div>
+              <div class="col" v-if="studyPlan.date">{{studyPlan.date | formatDate }}</div>
+              <div class="col" v-else>Missing Study Date</div>
+            </div>
+          </div>
+        </b-tab>
+      </b-tabs>
+    </b-card>
 
     <div>
       <b-modal
         id="study-plan-datepicker"
-        title="Study Date"
+        title="Add Your Study Date"
         no-close-on-backdrop
         no-close-on-esc
         hide-header-close
@@ -150,7 +135,7 @@ export default {
   components: {
     Datepicker
   },
-
+  props: ['msg'],
   data() {
     return {
       inputTopic: "",
@@ -244,7 +229,6 @@ export default {
 
     addTopicToStudyPlansHandler(topic) {
       const selectedDate = this.getDatepickerDate()
-      // this.openDatePicker('study-plan-datepicker')
 
       if (!selectedDate) {
         this.setDatepickerError("Please select a date.")
@@ -262,7 +246,7 @@ export default {
         this.setDatepickerMessage("Topic has been successfully added to study plan!")
         setTimeout(()=>{
           this.setDatepickerMessage("")
-        this.closeDatePicker('study-plan-datepicker')
+          this.closeDatePicker('study-plan-datepicker')
         }, 1500)
       }
     },
@@ -273,10 +257,6 @@ export default {
 
     closeDatePicker(datePickerId) {
       this.$bvModal.hide('study-plan-datepicker')
-    },
-
-    filterTopics(inputSearch) {
-      return this.topics.filter(topic => topic.name.toLowerCase().includes(inputSearch.toLowerCase()))
     },
 
     // Models
@@ -298,7 +278,6 @@ export default {
 
     addStudyPlan(studyPlan) {
         this.studyPlans.push(studyPlan)
-        // this.topicLastChecked = {} This is a detail that should be handled by the controller
     },
 
     deleteStudyPlan(studyPlanId) {
@@ -362,7 +341,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  #study-plan-list-item:nth-child(odd) {
+  #study-plan-list > div:nth-child(odd),
+  #topics-list > div:nth-child(odd) {
     background: #eee
   }
 </style>
