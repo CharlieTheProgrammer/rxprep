@@ -144,6 +144,7 @@
 
 <script>
 import Datepicker from 'vuejs-datepicker';
+import { setTimeout } from 'timers';
 
 export default {
   components: {
