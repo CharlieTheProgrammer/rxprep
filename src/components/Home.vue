@@ -125,6 +125,9 @@
         <div class="mb-2 text-center text-danger">
           <p>{{ datepicker.errorMsg }}</p>
         </div>
+        <div class="mb-2 text-center text-success">
+          <p>{{ datepicker.successMsg }}</p>
+        </div>
         <Datepicker
           placeholder="Select your planned study date"
           calendar-class="mx-auto position-relative"
@@ -158,6 +161,7 @@ export default {
       datepicker: {
         selectedDate: '',
         errorMsg: '',
+        successMsg: '',
         config: {
           disabledDates: {
             to: new Date(), // Disable all dates up to today
@@ -247,7 +251,13 @@ export default {
         topic.date = this.getDatepickerDate()
         this.addStudyPlan(topic)
         this.setDatepickerError("")
+        this.setDatepickerDate("")
+
+        this.setDatepickerMessage("Topic has been successfully added to study plan!")
+        setTimeout(()=>{
+          this.setDatepickerMessage("")
         this.closeDatePicker('study-plan-datepicker')
+        }, 1500)
       }
     },
 
@@ -270,6 +280,10 @@ export default {
 
     setDatepickerError(errorMsg) {
       this.datepicker.errorMsg = errorMsg
+    },
+
+    setDatepickerMessage(msg) {
+      this.datepicker.successMsg = msg
     },
 
     getDatepickerDate() {
