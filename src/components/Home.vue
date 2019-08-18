@@ -191,6 +191,10 @@ export default {
       }).sort(this.sortStudyPlans())
     }
   },
+  created() {
+    this.topics = JSON.parse(localStorage.getItem('topics')) || []
+    this.studyPlans = JSON.parse(localStorage.getItem('studyPlans')) || []
+  },
   methods: {
     sortStudyPlans() {
       if (this.order === 'asc') {
@@ -317,6 +321,20 @@ export default {
         });
 
         return uuid;
+    }
+  },
+  watch: {
+    topics: {
+      handler(val) {
+        localStorage.setItem('topics', JSON.stringify(val))
+      },
+      deep: true
+    },
+    studyPlans: {
+      handler(val) {
+        localStorage.setItem('studyPlans', JSON.stringify(val))
+      },
+      deep: true
     }
   }
 }
