@@ -176,7 +176,7 @@ export default {
       let day = date.getDate()
       let year = date.getFullYear()
 
-      return year + '-' + month + '-' + day
+      return month + '-' + day + '-' + year
     }
   },
   computed: {
