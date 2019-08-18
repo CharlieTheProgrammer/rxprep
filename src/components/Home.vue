@@ -131,7 +131,7 @@
         <Datepicker
           placeholder="Select your planned study date"
           calendar-class="mx-auto position-relative"
-          wrapper-class="text-center mx-auto"
+          wrapper-class="mx-auto"
           inline
           v-model="datepicker.selectedDate"
           :disabled-dates="datepicker.config.disabledDates"
